@@ -6,6 +6,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_weather/services/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:the_weather/services/networking.dart';
+
+const apiKey = '71ec977351f56d81296f5d19a97a1bb3';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -13,12 +16,13 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  double latitude = 0;
+  double langitude = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLocation();
-    getData();
+    getCurrentLocationData();
   }
 
   void getLocation() async {
@@ -60,30 +64,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
     print('=======');
   }
 
-  void getCurrentLocation() async {
+  void getCurrentLocationData() async {
     Location location = new Location();
     await location.getCurrentLocation();
-    print(location.latitude);
-    print(location.logitute);
+    latitude = location.latitude;
+    langitude = location.logitute;
+
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$langitude&exclude=hourly,daily&appid=$apiKey');
+
+    var weatherData = await networkHelper.getData();
+    print(weatherData);
   }
 
   void getData() async {
     final url = Uri.parse(
-        'http://api.openweathermap.org/data/2.5/weather?q=Berlin&APPID=71ec977351f56d81296f5d19a97a1bb3');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      String data = response.body;
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$langitude&exclude=hourly,daily&appid=$apiKey');
 
-      var decodeData = jsonDecode(data);
-      double temprature = decodeData['main']['temp'];
-      int condition = decodeData['weather'][0]['id'];
-      String cityName = decodeData['name'];
-      print(temprature);
-      print(condition);
-      print(cityName);
-    } else {
-      print(response.statusCode);
-    }
+    // double temprature = decodeData['main']['temp'];
+    // int condition = decodeData['weather'][0]['id'];
+    // String cityName = decodeData['name'];
+    // print(temprature);
+    // print(condition);
+    // print(cityName);
   }
 
   Future<Position?> determinePosition() async {
