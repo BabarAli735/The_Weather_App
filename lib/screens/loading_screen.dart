@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_weather/services/location.dart';
+import 'package:http/http.dart' as http;
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -14,6 +18,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // TODO: implement initState
     super.initState();
     getLocation();
+    getData();
   }
 
   void getLocation() async {
@@ -62,6 +67,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
     print(location.logitute);
   }
 
+  void getData() async {
+    final url = Uri.parse(
+        'http://api.openweathermap.org/data/2.5/weather?q=Berlin&APPID=71ec977351f56d81296f5d19a97a1bb3');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      String data = response.body;
+
+      var decodeData = jsonDecode(data);
+      double temprature = decodeData['main']['temp'];
+      int condition = decodeData['weather'][0]['id'];
+      String cityName = decodeData['name'];
+      print(temprature);
+      print(condition);
+      print(cityName);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
   Future<Position?> determinePosition() async {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
@@ -82,11 +106,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            //Get the current location
-            // getCurrentLocation();
-            // getLocation();
-            print('aa====');
-            // getCurrentLocation();
+            getData();
           },
           child: Text('Get Location'),
         ),
