@@ -45,7 +45,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding: EdgeInsets.only(left: 20.0),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -60,7 +60,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 15.0),
+                padding: EdgeInsets.only(right: 15.0, bottom: 50),
                 child: Text(
                   "It's 🍦 time in San Francisco!",
                   textAlign: TextAlign.right,
@@ -74,3 +74,10 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
+
+    // double temprature = decodeData['main']['temp'];
+    // int condition = decodeData['weather'][0]['id'];
+    // String cityName = decodeData['name'];
+    // print(temprature);
+    // print(condition);
+    // print(cityName);

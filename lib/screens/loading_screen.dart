@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:the_weather/screens/location_screen.dart';
 import 'package:the_weather/services/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:the_weather/services/networking.dart';
@@ -22,7 +24,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentLocationData();
+    // getCurrentLocationData();
+    getLocation();
   }
 
   void getLocation() async {
@@ -39,6 +42,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     permission = await Geolocator.checkPermission();
+    print('++++' + permission.toString());
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
@@ -62,6 +66,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     print(position);
     print('=======');
+    latitude = position.latitude;
+    langitude = position.longitude;
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$langitude&exclude=hourly,daily&appid=$apiKey');
+
+    var weatherData = await networkHelper.getData();
+    print(weatherData);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen();
+    }));
   }
 
   void getCurrentLocationData() async {
@@ -75,18 +89,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     var weatherData = await networkHelper.getData();
     print(weatherData);
-  }
-
-  void getData() async {
-    final url = Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$langitude&exclude=hourly,daily&appid=$apiKey');
-
-    // double temprature = decodeData['main']['temp'];
-    // int condition = decodeData['weather'][0]['id'];
-    // String cityName = decodeData['name'];
-    // print(temprature);
-    // print(condition);
-    // print(cityName);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen();
+    }));
   }
 
   Future<Position?> determinePosition() async {
@@ -107,13 +112,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            getData();
-          },
-          child: Text('Get Location'),
-        ),
-      ),
+          child: SpinKitDoubleBounce(
+        color: Colors.white,
+        size: 100.0,
+      )),
     );
   }
 }
