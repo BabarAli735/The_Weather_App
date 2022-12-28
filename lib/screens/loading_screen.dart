@@ -74,7 +74,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     var weatherData = await networkHelper.getData();
     print(weatherData);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return LocationScreen();
+      return LocationScreen(description: weatherData);
     }));
   }
 
@@ -88,9 +88,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$langitude&exclude=hourly,daily&appid=$apiKey');
 
     var weatherData = await networkHelper.getData();
-    print(weatherData);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return LocationScreen();
+      return LocationScreen(description: weatherData);
     }));
   }
 

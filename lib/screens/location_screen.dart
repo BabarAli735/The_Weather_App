@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:the_weather/utitities/constance.dart';
 
-class LocationScreen extends StatefulWidget {
-  @override
-  _LocationScreenState createState() => _LocationScreenState();
-}
+class LocationScreen extends StatelessWidget {
+  final dynamic description;
+  const LocationScreen({super.key, required this.description});
 
-class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
+    print(description);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -74,10 +76,3 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-
-    // double temprature = decodeData['main']['temp'];
-    // int condition = decodeData['weather'][0]['id'];
-    // String cityName = decodeData['name'];
-    // print(temprature);
-    // print(condition);
-    // print(cityName);
